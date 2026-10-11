@@ -49,4 +49,21 @@ public class RegistrationPage extends BasePage {
 
         click(registerButton);
     }
+    public void registerWithMismatchedPasswords(String user) {
+
+        type(firstName, "Group");
+        type(lastName, "Eleven");
+        type(address, "124 Test Street");
+        type(city, "Melbourne");
+        type(state, "VIC");
+        type(zipCode, "3000");
+        type(phone, "0400000000");
+        type(ssn, "123456789");
+
+        type(username, user);
+        type(password, "Test1234");
+        type(confirmPassword, "Different1234");
+
+        click(registerButton);
+    }
 }

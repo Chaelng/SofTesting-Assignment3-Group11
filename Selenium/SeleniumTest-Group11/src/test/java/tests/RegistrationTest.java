@@ -50,4 +50,24 @@ public class RegistrationTest extends BaseTest {
                 "Successful registration should display the username"
         );
     }
+    @Test
+    public void registrationRejectsMismatchedPasswords() {
+
+        String username = TestData.uniqueUsername();
+
+        RegistrationPage registrationPage =
+                new RegistrationPage(driver, wait);
+
+        registrationPage.openRegistration();
+
+        registrationPage.registerWithMismatchedPasswords(username);
+
+        String pageText =
+                driver.findElement(By.id("rightPanel")).getText();
+
+        assertTrue(
+                pageText.contains("Passwords did not match"),
+                "Registration should reject mismatched passwords"
+        );
+    }
 }
