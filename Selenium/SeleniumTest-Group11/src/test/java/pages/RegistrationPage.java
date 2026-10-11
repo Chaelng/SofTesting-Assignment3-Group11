@@ -5,9 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class RegistrationPage extends BasePage {
-
     private final By registerLink = By.linkText("Register");
-
+    // Locators for customer registration fields.
     private final By firstName = By.id("customer.firstName");
     private final By lastName = By.id("customer.lastName");
     private final By address = By.id("customer.address.street");
@@ -31,7 +30,10 @@ public class RegistrationPage extends BasePage {
     public void openRegistration() {
         click(registerLink);
     }
-
+    /**
+     * Completes and submits the registration form
+     * using valid customer data.
+     */
     public void registerNewUser(String user, String pass) {
 
         type(firstName, "Group");
