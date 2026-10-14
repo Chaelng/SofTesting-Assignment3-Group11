@@ -10,12 +10,18 @@ import java.time.Duration;
 
 public class BaseTest {
 
+    // Shared WebDriver instance used by all Selenium test classes.
     protected WebDriver driver;
+
+    // Explicit wait used to synchronise Selenium with dynamic page content.
     protected WebDriverWait wait;
 
     protected static final String BASE_URL =
             "https://parabank.parasoft.com/parabank";
-
+    /**
+     * Starts a fresh Chrome browser before every test
+     * and opens the ParaBank home page.
+     */
     @BeforeEach
     public void setUp() {
         driver = new ChromeDriver();
@@ -25,7 +31,10 @@ public class BaseTest {
 
         driver.get(BASE_URL + "/index.htm");
     }
-
+    /**
+     * Closes the browser after every test to ensure
+     * each test runs independently.
+     */
     @AfterEach
     public void tearDown() {
         if (driver != null) {

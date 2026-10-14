@@ -15,6 +15,12 @@ public class LoginPage extends BasePage {
     private final By loginButton =
             By.cssSelector("input[value='Log In']");
 
+    private final By logoutLink =
+            By.linkText("Log Out");
+
+    private final By rightPanel =
+            By.id("rightPanel");
+
     public LoginPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
@@ -23,5 +29,13 @@ public class LoginPage extends BasePage {
         type(username, user);
         type(password, pass);
         click(loginButton);
+    }
+
+    public void logout() {
+        click(logoutLink);
+    }
+
+    public String getResultText() {
+        return getText(rightPanel);
     }
 }
