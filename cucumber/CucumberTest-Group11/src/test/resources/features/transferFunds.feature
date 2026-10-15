@@ -1,4 +1,4 @@
-Feature: Transfer Funds
+Feature: Transferring Money Within a Customer's Accounts
   As a ParaBank customer
   I want to transfer money between my own accounts
   So that I can manage my funds
@@ -13,7 +13,7 @@ Feature: Transfer Funds
     And my first account balance should decrease by $100
     And my second account balance should increase by $100
 
-  Scenario Outline: Transfer succeeds for the smallest amount and for my full available balance
+  Scenario Outline: Transfer the minimum amount and the full available balance
     When I transfer $<amount> from my first account to my second account
     Then I should see that the transfer is complete
     And my first account balance should decrease by $<amount>
@@ -26,35 +26,36 @@ Feature: Transfer Funds
       | 415.49 |
       | 415.50 |
 
-  Scenario: Transfer amounts are recorded in whole cents
-    When I transfer $10.555 from my first account to my second account
-    Then I should see that the transfer is complete
-    And the confirmation should show a transferred amount of "$10.55"
+  @defect
+  Scenario: Reject an amount with more than two decimal places
+    When I transfer $100.001 from my first account to my second account
+    Then the transfer should not go through
+    And my account balances should not change
 
-  @known-issue
-  Scenario Outline: Transferring more than my available balance
+  @defect
+  Scenario Outline: Reject a transfer that exceeds the available balance
     When I transfer $<amount> from my first account to my second account
-    Then I should see that the transfer is complete
-    And the confirmation should show a transferred amount of "<shown>"
+    Then the transfer should not go through
+    And my account balances should not change
 
     Examples:
-      | amount  | shown       |
-      | 415.51  | $415.51     |
-      | 1000000 | $1000000.00 |
+      | amount  |
+      | 415.51  |
+      | 1000000 |
 
-  @known-issue
-  Scenario: Transferring a zero amount
+  @defect
+  Scenario: Reject a transfer of zero
     When I transfer $0.00 from my first account to my second account
-    Then I should see that the transfer is complete
-    And the confirmation should show a transferred amount of "$0.00"
+    Then the transfer should not go through
+    And my account balances should not change
 
-  @known-issue
-  Scenario: Transferring a negative amount
+  @defect
+  Scenario: Reject a negative transfer amount
     When I transfer $-100 from my first account to my second account
-    Then I should see that the transfer is complete
-    And the confirmation should show a transferred amount of "-$100.00"
+    Then the transfer should not go through
+    And my account balances should not change
 
-  Scenario Outline: Transfer does not go through when I enter an invalid amount
+  Scenario Outline: Reject an amount with an invalid input format
     When I try to transfer "<amount>" from my first account to my second account
     Then I should see an error message
     And my account balances should not change
