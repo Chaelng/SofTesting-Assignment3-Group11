@@ -1,22 +1,91 @@
-Feature: Bill Pay
+Feature: Paying Bills from a Customer Account
   As a ParaBank customer
   I want to pay bills to a payee from my account
-  So that I can settle what I owe without visiting a branch
+  So that I pay my bills online
 
-  Scenario: Successful bill payment
+  Background:
     Given I am logged in as a registered customer
-    When I pay a bill of $250 to a valid payee from my first account
-    Then I should see that the bill payment was successful
-    And my first account balance should decrease by $250
 
-  Scenario Outline: Bill payment is rejected when the payment details are invalid
-    Given ___
-    When ___ "<problem>"
-    Then ___ "<message>"
-    And ___
+  Scenario: Pay a bill to a valid payee
+    When I pay a bill of $100 to a valid payee from my first account
+    Then I should see that the bill payment was successful
+    And my first account balance should decrease by $100
+
+  Scenario Outline: Pay the minimum amount and the full available balance
+    When I pay a bill of $<amount> to a valid payee from my first account
+    Then I should see that the bill payment was successful
+    And my first account balance should decrease by $<amount>
 
     Examples:
-      | problem | message |
-      | ___     | ___     |
-      | ___     | ___     |
-      | ___     | ___     |
+      | amount |
+      | 0.01   |
+      | 0.02   |
+      | 515.49 |
+      | 515.50 |
+
+  @defect
+  Scenario Outline: Reject a bill payment that exceeds the available balance
+    When I pay a bill of $<amount> to a valid payee from my first account
+    Then the bill payment should not go through
+    And my account balances should not change
+
+    Examples:
+      | amount  |
+      | 515.51  |
+      | 1000000 |
+
+  @defect
+  Scenario: Reject a bill payment of zero
+    When I pay a bill of $0.00 to a valid payee from my first account
+    Then the bill payment should not go through
+    And my account balances should not change
+
+  @defect
+  Scenario: Reject a negative bill payment amount
+    When I pay a bill of $-100 to a valid payee from my first account
+    Then the bill payment should not go through
+    And my account balances should not change
+
+  @defect
+  Scenario: Reject a bill payment amount with more than two decimal places
+    When I pay a bill of $100.001 to a valid payee from my first account
+    Then the bill payment should not go through
+    And my account balances should not change
+
+  Scenario Outline: Reject a bill payment when a required payee field is empty
+    When I pay a bill of $100 to a valid payee but leave the <field> empty
+    Then I should see the message "<message>"
+    And my account balances should not change
+
+    Examples:
+      | field                 | message                     |
+      | payee name            | Payee name is required.     |
+      | address               | Address is required.        |
+      | city                  | City is required.           |
+      | state                 | State is required.          |
+      | zip code              | Zip Code is required.       |
+      | phone number          | Phone number is required.   |
+      | account number        | Account number is required. |
+      | verify account number | Account number is required. |
+
+  Scenario Outline: Reject a bill payment amount with an invalid input format
+    When I try to pay a bill of "<amount>" to a valid payee from my first account
+    Then I should see the message "<message>"
+    And my account balances should not change
+
+    Examples:
+      | amount | message                      |
+      |        | The amount cannot be empty.  |
+      | abc    | Please enter a valid amount. |
+      | $50    | Please enter a valid amount. |
+      | 1,000  | Please enter a valid amount. |
+
+  Scenario: Reject a bill payment when the account number confirmation does not match
+    When I pay a bill of $100 to a payee but enter a different account number to verify
+    Then I should see the message "The account numbers do not match."
+    And my account balances should not change
+
+  Scenario: Reject a payee account number containing non-numeric characters
+    When I pay a bill of $100 to a payee with the account number "1111a"
+    Then I should see an error message
+    And my account balances should not change
