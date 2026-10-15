@@ -37,7 +37,19 @@ Feature: Requesting a Loan Online
       | loanAmount | downPayment |
       | 0.01       | 0.00        |
       | 1000       | 50          |
-      | 5000       | 50          |
+      | 2577.50    | 50          |
+
+  Scenario Outline: Deny a loan amount above five times my available balance
+    When I request a loan of $<loanAmount> with a down payment of $50 from my first account
+    Then the loan status should be "Denied"
+    And I should see the message "We cannot grant a loan in that amount with your available funds."
+    And I should not be given a new loan account number
+    And my account balances should not change
+
+    Examples:
+      | loanAmount |
+      | 2600       |
+      | 5000       |
 
   Scenario Outline: Deny a loan when I cannot afford the down payment
     When I request a loan of $100 with a down payment of $<downPayment> from my first account
@@ -62,6 +74,7 @@ Feature: Requesting a Loan Online
   Scenario: Deny a loan when both the loan amount and the down payment are too large
     When I request a loan of $100000 with a down payment of $515.51 from my first account
     Then the loan status should be "Denied"
+    And I should see the message "You do not have sufficient funds for the given down payment."
     And I should not be given a new loan account number
     And my account balances should not change
 

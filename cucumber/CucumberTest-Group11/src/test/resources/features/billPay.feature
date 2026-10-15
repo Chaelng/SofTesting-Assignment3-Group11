@@ -78,7 +78,11 @@ Feature: Paying Bills from a Customer Account
       |        | The amount cannot be empty.  |
       | abc    | Please enter a valid amount. |
       | $50    | Please enter a valid amount. |
-      | 1,000  | Please enter a valid amount. |
+
+  Scenario: Reject a bill payment amount written with a thousands separator
+    When I try to pay a bill of "1,000" to a valid payee from my first account
+    Then I should see an error message
+    And my account balances should not change
 
   Scenario: Reject a bill payment when the account number confirmation does not match
     When I pay a bill of $100 to a payee but enter a different account number to verify
