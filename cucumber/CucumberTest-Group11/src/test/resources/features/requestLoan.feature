@@ -91,12 +91,14 @@ Feature: Requesting a Loan Online
     And I should not be given a new loan account number
     And my account balances should not change
 
+  @defect
   Scenario: Reject a negative down payment
     When I request a loan of $100 with a down payment of $-0.01 from my first account
     Then the loan should not be approved
     And I should not be given a new loan account number
     And my account balances should not change
 
+  @defect
   Scenario: Reject a loan amount with more than two decimal places
     When I request a loan of $100.001 with a down payment of $50 from my first account
     Then the loan should not be approved
