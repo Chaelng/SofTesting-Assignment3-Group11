@@ -59,6 +59,7 @@ Feature: Transferring Money Within a Customer's Accounts
     When I try to transfer "<amount>" from my first account to my second account
     Then I should see an error message
     And my account balances should not change
+    And no new transaction should appear in my account history
 
     Examples:
       | amount |

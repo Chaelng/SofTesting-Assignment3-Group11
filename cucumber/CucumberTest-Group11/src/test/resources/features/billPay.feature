@@ -84,6 +84,7 @@ Feature: Paying Bills from a Customer Account
     When I pay a bill of $100 to a payee but enter a different account number to verify
     Then I should see the message "The account numbers do not match."
     And my account balances should not change
+    And no new transaction should appear in my account history
 
   Scenario: Reject a payee account number containing non-numeric characters
     When I pay a bill of $100 to a payee with the account number "1111a"
