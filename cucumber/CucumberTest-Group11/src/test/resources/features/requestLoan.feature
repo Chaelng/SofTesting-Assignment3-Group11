@@ -88,6 +88,7 @@ Feature: Requesting a Loan Online
   Scenario: Reject a loan amount of zero
     When I request a loan of $0 with a down payment of $50 from my first account
     Then the loan should not be approved
+    And I should see an error message
     And I should not be given a new loan account number
     And my account balances should not change
 
@@ -95,6 +96,7 @@ Feature: Requesting a Loan Online
   Scenario: Reject a negative down payment
     When I request a loan of $100 with a down payment of $-0.01 from my first account
     Then the loan should not be approved
+    And I should see an error message
     And I should not be given a new loan account number
     And my account balances should not change
 
@@ -102,6 +104,7 @@ Feature: Requesting a Loan Online
   Scenario: Reject a loan amount with more than two decimal places
     When I request a loan of $100.001 with a down payment of $50 from my first account
     Then the loan should not be approved
+    And I should see an error message
     And I should not be given a new loan account number
     And my account balances should not change
 

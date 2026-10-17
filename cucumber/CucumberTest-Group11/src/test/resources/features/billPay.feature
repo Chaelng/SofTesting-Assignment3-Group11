@@ -27,6 +27,7 @@ Feature: Paying Bills from a Customer Account
   Scenario Outline: Reject a bill payment that exceeds the available balance
     When I pay a bill of $<amount> to a valid payee from my first account
     Then the bill payment should not go through
+    And I should see an error message
     And my account balances should not change
 
     Examples:
@@ -38,18 +39,21 @@ Feature: Paying Bills from a Customer Account
   Scenario: Reject a bill payment of zero
     When I pay a bill of $0.00 to a valid payee from my first account
     Then the bill payment should not go through
+    And I should see an error message
     And my account balances should not change
 
   @defect
   Scenario: Reject a negative bill payment amount
     When I pay a bill of $-100 to a valid payee from my first account
     Then the bill payment should not go through
+    And I should see an error message
     And my account balances should not change
 
   @defect
   Scenario: Reject a bill payment amount with more than two decimal places
     When I pay a bill of $100.001 to a valid payee from my first account
     Then the bill payment should not go through
+    And I should see an error message
     And my account balances should not change
 
   Scenario Outline: Reject a bill payment when a required payee field is empty

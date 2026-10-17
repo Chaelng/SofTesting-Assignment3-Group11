@@ -30,12 +30,14 @@ Feature: Transferring Money Within a Customer's Accounts
   Scenario: Reject an amount with more than two decimal places
     When I transfer $100.001 from my first account to my second account
     Then the transfer should not go through
+    And I should see an error message
     And my account balances should not change
 
   @defect
   Scenario Outline: Reject a transfer that exceeds the available balance
     When I transfer $<amount> from my first account to my second account
     Then the transfer should not go through
+    And I should see an error message
     And my account balances should not change
 
     Examples:
@@ -47,12 +49,14 @@ Feature: Transferring Money Within a Customer's Accounts
   Scenario: Reject a transfer of zero
     When I transfer $0.00 from my first account to my second account
     Then the transfer should not go through
+    And I should see an error message
     And my account balances should not change
 
   @defect
   Scenario: Reject a negative transfer amount
     When I transfer $-100 from my first account to my second account
     Then the transfer should not go through
+    And I should see an error message
     And my account balances should not change
 
   Scenario Outline: Reject an amount with an invalid input format
