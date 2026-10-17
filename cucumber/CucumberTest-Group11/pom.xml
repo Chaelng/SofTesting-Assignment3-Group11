@@ -47,7 +47,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Selenium WebDriver (ChromeDriver only, per assignment rules) -->
+        <!-- Selenium WebDriver (ChromeDriver only) -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
